@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:money_expense/core/data/datasources/local_database.dart';
+import 'package:money_expense/core/data/models/models.dart';
+import 'package:money_expense/core/data/repositories/catagory_repository.dart';
+import 'package:money_expense/core/data/repositories/transaction_repository.dart';
+
 
 class AddNewExpense extends StatefulWidget {
-  const AddNewExpense({super.key});
+  final AppDatabase db; 
+
+  const AddNewExpense({super.key, required this.db});
 
   @override
   State<AddNewExpense> createState() => _AddNewExpenseState();
@@ -75,6 +82,65 @@ class _AddNewExpenseState extends State<AddNewExpense> {
     }
   }
 
+  Future<void> _saveTransaction() async {
+    final name = nameController.text.trim();
+    final categoryName = selectedCategory?.trim() ?? '';
+    final date = selectedDate ?? DateTime.now();
+    final nominal = double.tryParse(nominalController.text.trim()) ?? 0;
+
+    if (name.isEmpty || categoryName.isEmpty || nominal <= 0) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Lengkapi semua data!')));
+      return;
+    }
+
+    final categoryRepo = CategoryRepository(widget.db);
+    final transactionRepo = TransactionRepository(widget.db);
+
+    // 1. Cek kategori
+    List<CategoryModel> existingCategories = await categoryRepo
+        .getAllCategories();
+    CategoryModel? category = existingCategories.firstWhere(
+      (c) => c.name.toLowerCase() == categoryName.toLowerCase(),
+      orElse: () => CategoryModel(name: categoryName),
+    );
+
+    // 2. Jika kategori baru, insert ke db
+    if (category.id == null) {
+      final newCatId = await categoryRepo.insertCategory(category);
+      category = CategoryModel(id: newCatId, name: category.name);
+    }
+
+    // 3. Insert transaksi
+    final trxId = await transactionRepo.insertTransaction(
+      TransactionModel(
+        title: name,
+        amount: nominal,
+        categoryId: category.id!,
+        date: date,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Transaksi berhasil ditambahkan: ID $trxId')),
+    );
+
+    // Debug print
+    print("Nama: $name");
+    print("Kategori: ${category.name} (ID: ${category.id})");
+    print("Tanggal: $date");
+    print("Nominal: $nominal");
+    print("Transaction inserted: $trxId");
+
+    // Clear form
+    nameController.clear();
+    nominalController.clear();
+    selectedCategory = null;
+    dateController.clear();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,7 +168,7 @@ class _AddNewExpenseState extends State<AddNewExpense> {
           ),
           const SizedBox(height: 16),
 
-          // catagory expense
+          // category expense
           DropdownButtonFormField<String>(
             value: selectedCategory,
             items: categories.map((cat) {
@@ -130,7 +196,7 @@ class _AddNewExpenseState extends State<AddNewExpense> {
               suffixIcon: Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: Color(0xFFE0E0E0),
+                  color: const Color(0xFFE0E0E0),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -141,7 +207,7 @@ class _AddNewExpenseState extends State<AddNewExpense> {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // date expense
           TextField(
@@ -185,20 +251,7 @@ class _AddNewExpenseState extends State<AddNewExpense> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              onPressed: () {
-                final name = nameController.text;
-                final category = selectedCategory ?? '';
-                final date = selectedDate ?? DateTime.now();
-                final nominal = double.tryParse(nominalController.text) ?? 0;
-
-                // Debug print
-                print("Nama: $name");
-                print("Kategori: $category");
-                print("Tanggal: $date");
-                print("Nominal: $nominal");
-
-                // TODO: Simpan ke database
-              },
+              onPressed: _saveTransaction,
               child: const Text(
                 'Simpan',
                 style: TextStyle(color: Colors.white, fontSize: 16),

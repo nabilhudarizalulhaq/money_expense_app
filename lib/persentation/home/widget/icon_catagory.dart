@@ -8,17 +8,17 @@ class IconCatagory extends StatelessWidget {
 
   const IconCatagory({
     super.key,
-    required this.icon ,
+    required this.icon,
     this.backgroundColor = Colors.teal,
     this.iconColor = Colors.white,
-    this.size = 34,
+    this.size = 26,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(6),
-      height: 56,
+      // height: 56,
       width: 56,
       decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
       child: Icon(icon, color: iconColor, size: size),

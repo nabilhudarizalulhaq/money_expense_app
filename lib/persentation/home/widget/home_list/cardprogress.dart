@@ -21,7 +21,7 @@ class CardProgres extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       width: 180,
-      height: 140,
+      height: 100,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(12),
@@ -33,16 +33,16 @@ class CardProgres extends StatelessWidget {
             title,
             style: TextStyle(
               color: titleColor,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
             ),
           ),
-          const SizedBox(height: 14),
+          Spacer(),
           Text(
             amount,
             style: TextStyle(
               color: amountColor,
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),

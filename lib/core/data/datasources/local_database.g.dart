@@ -3,7 +3,7 @@
 part of 'local_database.dart';
 
 // ignore_for_file: type=lint
-class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+class $UsersTable extends Users with TableInfo<$UsersTable, UserData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -38,7 +38,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-    $customConstraints: 'UNIQUE',
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
   static const VerificationMeta _passwordMeta = const VerificationMeta(
     'password',
@@ -60,7 +60,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   static const String $name = 'users';
   @override
   VerificationContext validateIntegrity(
-    Insertable<User> instance, {
+    Insertable<UserData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -98,9 +98,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+  UserData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return User(
+    return UserData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -126,12 +126,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   }
 }
 
-class User extends DataClass implements Insertable<User> {
+class UserData extends DataClass implements Insertable<UserData> {
   final int id;
   final String name;
   final String email;
   final String password;
-  const User({
+  const UserData({
     required this.id,
     required this.name,
     required this.email,
@@ -156,12 +156,12 @@ class User extends DataClass implements Insertable<User> {
     );
   }
 
-  factory User.fromJson(
+  factory UserData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return User(
+    return UserData(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       email: serializer.fromJson<String>(json['email']),
@@ -179,15 +179,15 @@ class User extends DataClass implements Insertable<User> {
     };
   }
 
-  User copyWith({int? id, String? name, String? email, String? password}) =>
-      User(
+  UserData copyWith({int? id, String? name, String? email, String? password}) =>
+      UserData(
         id: id ?? this.id,
         name: name ?? this.name,
         email: email ?? this.email,
         password: password ?? this.password,
       );
-  User copyWithCompanion(UsersCompanion data) {
-    return User(
+  UserData copyWithCompanion(UsersCompanion data) {
+    return UserData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       email: data.email.present ? data.email.value : this.email,
@@ -197,7 +197,7 @@ class User extends DataClass implements Insertable<User> {
 
   @override
   String toString() {
-    return (StringBuffer('User(')
+    return (StringBuffer('UserData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('email: $email, ')
@@ -211,14 +211,14 @@ class User extends DataClass implements Insertable<User> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is User &&
+      (other is UserData &&
           other.id == this.id &&
           other.name == this.name &&
           other.email == this.email &&
           other.password == this.password);
 }
 
-class UsersCompanion extends UpdateCompanion<User> {
+class UsersCompanion extends UpdateCompanion<UserData> {
   final Value<int> id;
   final Value<String> name;
   final Value<String> email;
@@ -237,7 +237,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   }) : name = Value(name),
        email = Value(email),
        password = Value(password);
-  static Insertable<User> custom({
+  static Insertable<UserData> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? email,
@@ -296,7 +296,7 @@ class UsersCompanion extends UpdateCompanion<User> {
 }
 
 class $CategoriesTable extends Categories
-    with TableInfo<$CategoriesTable, Category> {
+    with TableInfo<$CategoriesTable, CategoryData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -332,7 +332,7 @@ class $CategoriesTable extends Categories
   static const String $name = 'categories';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Category> instance, {
+    Insertable<CategoryData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -354,9 +354,9 @@ class $CategoriesTable extends Categories
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Category map(Map<String, dynamic> data, {String? tablePrefix}) {
+  CategoryData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Category(
+    return CategoryData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -374,10 +374,10 @@ class $CategoriesTable extends Categories
   }
 }
 
-class Category extends DataClass implements Insertable<Category> {
+class CategoryData extends DataClass implements Insertable<CategoryData> {
   final int id;
   final String name;
-  const Category({required this.id, required this.name});
+  const CategoryData({required this.id, required this.name});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -390,12 +390,12 @@ class Category extends DataClass implements Insertable<Category> {
     return CategoriesCompanion(id: Value(id), name: Value(name));
   }
 
-  factory Category.fromJson(
+  factory CategoryData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Category(
+    return CategoryData(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
     );
@@ -409,10 +409,10 @@ class Category extends DataClass implements Insertable<Category> {
     };
   }
 
-  Category copyWith({int? id, String? name}) =>
-      Category(id: id ?? this.id, name: name ?? this.name);
-  Category copyWithCompanion(CategoriesCompanion data) {
-    return Category(
+  CategoryData copyWith({int? id, String? name}) =>
+      CategoryData(id: id ?? this.id, name: name ?? this.name);
+  CategoryData copyWithCompanion(CategoriesCompanion data) {
+    return CategoryData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
     );
@@ -420,7 +420,7 @@ class Category extends DataClass implements Insertable<Category> {
 
   @override
   String toString() {
-    return (StringBuffer('Category(')
+    return (StringBuffer('CategoryData(')
           ..write('id: $id, ')
           ..write('name: $name')
           ..write(')'))
@@ -432,10 +432,10 @@ class Category extends DataClass implements Insertable<Category> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Category && other.id == this.id && other.name == this.name);
+      (other is CategoryData && other.id == this.id && other.name == this.name);
 }
 
-class CategoriesCompanion extends UpdateCompanion<Category> {
+class CategoriesCompanion extends UpdateCompanion<CategoryData> {
   final Value<int> id;
   final Value<String> name;
   const CategoriesCompanion({
@@ -446,7 +446,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     this.id = const Value.absent(),
     required String name,
   }) : name = Value(name);
-  static Insertable<Category> custom({
+  static Insertable<CategoryData> custom({
     Expression<int>? id,
     Expression<String>? name,
   }) {
@@ -483,7 +483,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
 }
 
 class $TransactionsTable extends Transactions
-    with TableInfo<$TransactionsTable, Transaction> {
+    with TableInfo<$TransactionsTable, TransactionData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -551,7 +551,7 @@ class $TransactionsTable extends Transactions
   static const String $name = 'transactions';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Transaction> instance, {
+    Insertable<TransactionData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -597,9 +597,9 @@ class $TransactionsTable extends Transactions
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Transaction map(Map<String, dynamic> data, {String? tablePrefix}) {
+  TransactionData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Transaction(
+    return TransactionData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -629,13 +629,13 @@ class $TransactionsTable extends Transactions
   }
 }
 
-class Transaction extends DataClass implements Insertable<Transaction> {
+class TransactionData extends DataClass implements Insertable<TransactionData> {
   final int id;
   final String title;
   final double amount;
   final int categoryId;
   final DateTime date;
-  const Transaction({
+  const TransactionData({
     required this.id,
     required this.title,
     required this.amount,
@@ -663,12 +663,12 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     );
   }
 
-  factory Transaction.fromJson(
+  factory TransactionData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Transaction(
+    return TransactionData(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       amount: serializer.fromJson<double>(json['amount']),
@@ -688,21 +688,21 @@ class Transaction extends DataClass implements Insertable<Transaction> {
     };
   }
 
-  Transaction copyWith({
+  TransactionData copyWith({
     int? id,
     String? title,
     double? amount,
     int? categoryId,
     DateTime? date,
-  }) => Transaction(
+  }) => TransactionData(
     id: id ?? this.id,
     title: title ?? this.title,
     amount: amount ?? this.amount,
     categoryId: categoryId ?? this.categoryId,
     date: date ?? this.date,
   );
-  Transaction copyWithCompanion(TransactionsCompanion data) {
-    return Transaction(
+  TransactionData copyWithCompanion(TransactionsCompanion data) {
+    return TransactionData(
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
       amount: data.amount.present ? data.amount.value : this.amount,
@@ -715,7 +715,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
 
   @override
   String toString() {
-    return (StringBuffer('Transaction(')
+    return (StringBuffer('TransactionData(')
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('amount: $amount, ')
@@ -730,7 +730,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Transaction &&
+      (other is TransactionData &&
           other.id == this.id &&
           other.title == this.title &&
           other.amount == this.amount &&
@@ -738,7 +738,7 @@ class Transaction extends DataClass implements Insertable<Transaction> {
           other.date == this.date);
 }
 
-class TransactionsCompanion extends UpdateCompanion<Transaction> {
+class TransactionsCompanion extends UpdateCompanion<TransactionData> {
   final Value<int> id;
   final Value<String> title;
   final Value<double> amount;
@@ -761,7 +761,7 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
        amount = Value(amount),
        categoryId = Value(categoryId),
        date = Value(date);
-  static Insertable<Transaction> custom({
+  static Insertable<TransactionData> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<double>? amount,
@@ -945,14 +945,14 @@ class $$UsersTableTableManager
         RootTableManager<
           _$AppDatabase,
           $UsersTable,
-          User,
+          UserData,
           $$UsersTableFilterComposer,
           $$UsersTableOrderingComposer,
           $$UsersTableAnnotationComposer,
           $$UsersTableCreateCompanionBuilder,
           $$UsersTableUpdateCompanionBuilder,
-          (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
-          User,
+          (UserData, BaseReferences<_$AppDatabase, $UsersTable, UserData>),
+          UserData,
           PrefetchHooks Function()
         > {
   $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
@@ -1002,14 +1002,14 @@ typedef $$UsersTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $UsersTable,
-      User,
+      UserData,
       $$UsersTableFilterComposer,
       $$UsersTableOrderingComposer,
       $$UsersTableAnnotationComposer,
       $$UsersTableCreateCompanionBuilder,
       $$UsersTableUpdateCompanionBuilder,
-      (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
-      User,
+      (UserData, BaseReferences<_$AppDatabase, $UsersTable, UserData>),
+      UserData,
       PrefetchHooks Function()
     >;
 typedef $$CategoriesTableCreateCompanionBuilder =
@@ -1018,10 +1018,10 @@ typedef $$CategoriesTableUpdateCompanionBuilder =
     CategoriesCompanion Function({Value<int> id, Value<String> name});
 
 final class $$CategoriesTableReferences
-    extends BaseReferences<_$AppDatabase, $CategoriesTable, Category> {
+    extends BaseReferences<_$AppDatabase, $CategoriesTable, CategoryData> {
   $$CategoriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$TransactionsTable, List<Transaction>>
+  static MultiTypedResultKey<$TransactionsTable, List<TransactionData>>
   _transactionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
     db.transactions,
     aliasName: $_aliasNameGenerator(
@@ -1154,14 +1154,14 @@ class $$CategoriesTableTableManager
         RootTableManager<
           _$AppDatabase,
           $CategoriesTable,
-          Category,
+          CategoryData,
           $$CategoriesTableFilterComposer,
           $$CategoriesTableOrderingComposer,
           $$CategoriesTableAnnotationComposer,
           $$CategoriesTableCreateCompanionBuilder,
           $$CategoriesTableUpdateCompanionBuilder,
-          (Category, $$CategoriesTableReferences),
-          Category,
+          (CategoryData, $$CategoriesTableReferences),
+          CategoryData,
           PrefetchHooks Function({bool transactionsRefs})
         > {
   $$CategoriesTableTableManager(_$AppDatabase db, $CategoriesTable table)
@@ -1200,9 +1200,9 @@ class $$CategoriesTableTableManager
                 return [
                   if (transactionsRefs)
                     await $_getPrefetchedData<
-                      Category,
+                      CategoryData,
                       $CategoriesTable,
-                      Transaction
+                      TransactionData
                     >(
                       currentTable: table,
                       referencedTable: $$CategoriesTableReferences
@@ -1229,14 +1229,14 @@ typedef $$CategoriesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $CategoriesTable,
-      Category,
+      CategoryData,
       $$CategoriesTableFilterComposer,
       $$CategoriesTableOrderingComposer,
       $$CategoriesTableAnnotationComposer,
       $$CategoriesTableCreateCompanionBuilder,
       $$CategoriesTableUpdateCompanionBuilder,
-      (Category, $$CategoriesTableReferences),
-      Category,
+      (CategoryData, $$CategoriesTableReferences),
+      CategoryData,
       PrefetchHooks Function({bool transactionsRefs})
     >;
 typedef $$TransactionsTableCreateCompanionBuilder =
@@ -1257,7 +1257,7 @@ typedef $$TransactionsTableUpdateCompanionBuilder =
     });
 
 final class $$TransactionsTableReferences
-    extends BaseReferences<_$AppDatabase, $TransactionsTable, Transaction> {
+    extends BaseReferences<_$AppDatabase, $TransactionsTable, TransactionData> {
   $$TransactionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $CategoriesTable _categoryIdTable(_$AppDatabase db) =>
@@ -1436,14 +1436,14 @@ class $$TransactionsTableTableManager
         RootTableManager<
           _$AppDatabase,
           $TransactionsTable,
-          Transaction,
+          TransactionData,
           $$TransactionsTableFilterComposer,
           $$TransactionsTableOrderingComposer,
           $$TransactionsTableAnnotationComposer,
           $$TransactionsTableCreateCompanionBuilder,
           $$TransactionsTableUpdateCompanionBuilder,
-          (Transaction, $$TransactionsTableReferences),
-          Transaction,
+          (TransactionData, $$TransactionsTableReferences),
+          TransactionData,
           PrefetchHooks Function({bool categoryId})
         > {
   $$TransactionsTableTableManager(_$AppDatabase db, $TransactionsTable table)
@@ -1542,14 +1542,14 @@ typedef $$TransactionsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $TransactionsTable,
-      Transaction,
+      TransactionData,
       $$TransactionsTableFilterComposer,
       $$TransactionsTableOrderingComposer,
       $$TransactionsTableAnnotationComposer,
       $$TransactionsTableCreateCompanionBuilder,
       $$TransactionsTableUpdateCompanionBuilder,
-      (Transaction, $$TransactionsTableReferences),
-      Transaction,
+      (TransactionData, $$TransactionsTableReferences),
+      TransactionData,
       PrefetchHooks Function({bool categoryId})
     >;
 

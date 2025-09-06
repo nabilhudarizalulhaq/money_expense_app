@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:money_expense/core/data/datasources/local_database.dart';
 import 'package:money_expense/persentation/add%20new%20expe/add_new_expense.dart';
 import 'package:money_expense/persentation/home/home.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final db = AppDatabase();
+  runApp(MyApp(db: db));
 }
 
+// Future<void> main() async {
+//   runApp(const MyApp());
+// }
+
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final AppDatabase db;
+  const MyApp({super.key, required this.db});
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +24,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Money Expense',
       routes: {
-        '/': (context) => const HomePage(),
-      '/add': (context) => const AddNewExpense()
+        '/': (context) => HomePage(db: db),
+        '/add': (context) => AddNewExpense(db: db),
       },
     );
   }
