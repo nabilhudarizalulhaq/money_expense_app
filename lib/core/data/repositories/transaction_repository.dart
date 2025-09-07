@@ -47,24 +47,27 @@ class TransactionRepository {
   // ---------------- TRANSACTION HARI INI ----------------
 
   Future<List<TransactionModel>> getTransactionsToday() async {
-  final today = DateTime.now();
-  final start = DateTime(today.year, today.month, today.day);
-  final end = start.add(const Duration(days: 1));
+    final today = DateTime.now();
+    final start = DateTime(today.year, today.month, today.day);
+    final end = start.add(const Duration(days: 1));
 
-  final query = db.select(db.transactions)
-    ..where((t) => t.date.isBetweenValues(start, end));
+    final query = db.select(db.transactions)
+      ..where((t) => t.date.isBetweenValues(start, end));
 
-  final result = await query.get();
+    final result = await query.get();
 
-  // Ubah ke TransactionModel jika perlu
-  return result.map((e) => TransactionModel(
-    id: e.id,
-    title: e.title,
-    amount: e.amount,
-    categoryId: e.categoryId,
-    date: e.date,
-  )).toList();
-}
+    return result
+        .map(
+          (e) => TransactionModel(
+            id: e.id,
+            title: e.title,
+            amount: e.amount,
+            categoryId: e.categoryId,
+            date: e.date,
+          ),
+        )
+        .toList();
+  }
 
   // ---------------- TOTAL BULAN INI ----------------
   Future<double> getTotalThisMonth() async {
@@ -77,6 +80,20 @@ class TransactionRepository {
 
     final result = await query.get();
     return result.fold<double>(0, (prev, element) => prev + element.amount);
+  }
+
+  // ---------------- LIST KEMARIN ----------------
+  Future<List<TransactionModel>> getTransactionsYesterday() async {
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    final start = DateTime(yesterday.year, yesterday.month, yesterday.day);
+    final end = start.add(const Duration(days: 1));
+
+    final query = db.select(db.transactions)
+      ..where((t) => t.date.isBetweenValues(start, end));
+
+    final result = await query.get();
+
+    return result.map((e) => TransactionModel.fromDrift(e)).toList();
   }
 
   // ---------------- BERDASARKAN KATAGORI ----------------
@@ -92,6 +109,4 @@ class TransactionRepository {
     }
     return total;
   }
-
-  
 }

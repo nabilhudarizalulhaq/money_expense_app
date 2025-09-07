@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class IconCatagory extends StatelessWidget {
-  final IconData icon;
+  final Widget image;
   final Color backgroundColor;
   final Color iconColor;
   final double size;
 
   const IconCatagory({
     super.key,
-    required this.icon,
+    required this.image,
     this.backgroundColor = Colors.teal,
     this.iconColor = Colors.white,
     this.size = 26,
@@ -21,7 +21,7 @@ class IconCatagory extends StatelessWidget {
       // height: 56,
       width: 56,
       decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
-      child: Icon(icon, color: iconColor, size: size),
+      child: image,
     );
   }
 }

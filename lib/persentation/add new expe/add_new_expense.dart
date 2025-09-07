@@ -3,6 +3,7 @@ import 'package:money_expense/core/data/datasources/local_database.dart';
 import 'package:money_expense/core/data/models/models.dart';
 import 'package:money_expense/core/data/repositories/catagory_repository.dart';
 import 'package:money_expense/core/data/repositories/transaction_repository.dart';
+import 'package:money_expense/shared/theme.dart';
 
 class AddNewExpense extends StatefulWidget {
   final AppDatabase db;
@@ -20,42 +21,6 @@ class _AddNewExpenseState extends State<AddNewExpense> {
   final TextEditingController nominalController = TextEditingController();
 
   String? selectedCategory;
-
-  final List<String> categories = [
-    'Makanan',
-    'Internet',
-    'Edukasi',
-    'Hadiah',
-    'Transport',
-    'Belanja',
-    'Alat Rumah',
-    'Olahraga',
-    'Hiburan',
-  ];
-
-  final Map<String, IconData> categoryIcons = {
-    'Makanan': Icons.fastfood,
-    'Internet': Icons.wifi,
-    'Edukasi': Icons.school,
-    'Hadiah': Icons.card_giftcard,
-    'Transport': Icons.directions_car,
-    'Belanja': Icons.shopping_bag,
-    'Alat Rumah': Icons.home_repair_service,
-    'Olahraga': Icons.sports,
-    'Hiburan': Icons.movie,
-  };
-
-  final Map<String, Color> categoryColors = {
-    'Makanan': Color(0xFFF2C94C),
-    'Internet': Color(0xFF56CCF2),
-    'Edukasi': Color(0xFFF2994A),
-    'Hadiah': Color(0xFFEB5757),
-    'Transport': Color(0xFF9B51E0),
-    'Belanja': Color(0xFF27AE60),
-    'Alat Rumah': Color(0xFFBB6BD9),
-    'Olahraga': Color(0xFF2D9CDB),
-    'Hiburan': Color(0xFF2D9CDB),
-  };
 
   @override
   void dispose() {
@@ -170,12 +135,22 @@ class _AddNewExpenseState extends State<AddNewExpense> {
           // category expense
           DropdownButtonFormField<String>(
             value: selectedCategory,
-            items: categories.map((cat) {
-              return DropdownMenuItem(
+            items: ListCategoryData.categories.map((cat) {
+              return DropdownMenuItem<String>(
                 value: cat,
                 child: Row(
                   children: [
-                    Icon(categoryIcons[cat], color: categoryColors[cat]),
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                          ListCategoryData.categoryColors[cat] ?? Colors.black,
+                          BlendMode.srcIn,
+                        ),
+                        child: CategoryIcon.categoryIcons[cat],
+                      ),
+                    ),
                     const SizedBox(width: 8),
                     Text(cat),
                   ],
@@ -192,20 +167,14 @@ class _AddNewExpenseState extends State<AddNewExpense> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              suffixIcon: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE0E0E0),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.arrow_forward_ios_outlined,
-                  color: Color(0xFF828282),
-                  size: 16,
-                ),
+              suffixIcon: const Icon(
+                Icons.arrow_forward_ios_outlined,
+                size: 16,
+                color: Color(0xFF828282),
               ),
             ),
           ),
+
           const SizedBox(height: 16),
 
           // date expense
