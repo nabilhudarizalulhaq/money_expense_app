@@ -429,6 +429,10 @@ class CategoryData extends DataClass implements Insertable<CategoryData> {
 
   @override
   int get hashCode => Object.hash(id, name);
+
+  String? get color => null;
+
+  String? get iconName => null;
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

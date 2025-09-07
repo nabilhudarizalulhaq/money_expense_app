@@ -44,6 +44,28 @@ class TransactionRepository {
     return result.fold<double>(0, (prev, element) => prev + element.amount);
   }
 
+  // ---------------- TRANSACTION HARI INI ----------------
+
+  Future<List<TransactionModel>> getTransactionsToday() async {
+  final today = DateTime.now();
+  final start = DateTime(today.year, today.month, today.day);
+  final end = start.add(const Duration(days: 1));
+
+  final query = db.select(db.transactions)
+    ..where((t) => t.date.isBetweenValues(start, end));
+
+  final result = await query.get();
+
+  // Ubah ke TransactionModel jika perlu
+  return result.map((e) => TransactionModel(
+    id: e.id,
+    title: e.title,
+    amount: e.amount,
+    categoryId: e.categoryId,
+    date: e.date,
+  )).toList();
+}
+
   // ---------------- TOTAL BULAN INI ----------------
   Future<double> getTotalThisMonth() async {
     final today = DateTime.now();
@@ -70,4 +92,6 @@ class TransactionRepository {
     }
     return total;
   }
+
+  
 }

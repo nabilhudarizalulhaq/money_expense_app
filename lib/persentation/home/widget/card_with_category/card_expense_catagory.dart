@@ -23,7 +23,7 @@ class CardExpenseCatagory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      width: 120,
+      // width: 120,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -38,7 +38,6 @@ class CardExpenseCatagory extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           IconCatagory(icon: icon, backgroundColor: backgroundColor),
           const SizedBox(height: 14),
@@ -48,6 +47,7 @@ class CardExpenseCatagory extends StatelessWidget {
             amount,
             style: TextStyle(
               fontSize: 14,
+              letterSpacing: 1,
               fontWeight: FontWeight.bold,
               color: textColor,
             ),

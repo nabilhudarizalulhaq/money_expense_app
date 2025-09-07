@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:money_expense/core/data/repositories/catagory_repository.dart';
 import 'package:money_expense/core/data/repositories/transaction_repository.dart';
-import 'package:money_expense/persentation/home/widget/card_todat&mount/card_expense_catagory.dart';
+import 'package:money_expense/persentation/home/widget/card_with_category/card_expense_catagory.dart';
+import 'package:intl/intl.dart';
 
 class ExpenseCategory extends StatelessWidget {
   final TransactionRepository transactionRepo;
@@ -16,71 +17,111 @@ class ExpenseCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: categoryRepo.getAllCategories(), // Ambil semua kategori
+      future: categoryRepo.getAllCategories(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         }
-
+``
         final categories = snapshot.data!;
 
-        return SingleChildScrollView(
-          clipBehavior: Clip.none,
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: List.generate(categories.length, (index) {
-              final cat = categories[index];
+        // get all total category
+        final futures = categories
+            .map((cat) => transactionRepo.getTotalByCategory(cat.id!))
+            .toList();
 
-              return FutureBuilder<double>(
-                future: transactionRepo.getTotalByCategory(cat.id!),
-                builder: (context, snapAmount) {
-                  double amount = snapAmount.data ?? 0.0;
+        return FutureBuilder<List<double>>(
+          future: Future.wait(futures),
+          builder: (context, totalsSnapshot) {
+            if (!totalsSnapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final totals = totalsSnapshot.data!;
+
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              clipBehavior: Clip.none,
+              child: Row(
+                children: List.generate(categories.length, (index) {
+                  final cat = categories[index];
+                  final totalAmount = totals[index];
+                  final formatter = NumberFormat.currency(
+                    locale: 'id_ID',
+                    symbol: 'Rp. ',
+                    decimalDigits: 0,
+                  );
+
+                  String formatted = formatter.format(totalAmount);
+
+                  // Warna dan icon dari database
+                  final iconData = _getCategoryIcon(cat.name);
 
                   return Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: CardExpenseCatagory(
                       title: cat.name,
-                      amount: 'Rp. ${amount.toStringAsFixed(0)}',
+                      amount: formatted,
                       backgroundColor: _getCategoryColor(cat.name),
-                      icon: _getCategoryIcon(cat.name),
+                      icon: iconData,
                     ),
                   );
-                },
-              );
-            }),
-          ),
+                }),
+              ),
+            );
+          },
         );
       },
     );
   }
 
+  // Fungsi mapping warna
   Color _getCategoryColor(String category) {
     switch (category) {
       case 'Makanan':
-        return Colors.orange;
+        return const Color(0xFFF2C94C);
+      case 'Internet':
+        return const Color(0xFF56CCF2);
+      case 'Edukasi':
+        return const Color(0xFFF2994A);
+      case 'Hadiah':
+        return const Color(0xFFEB5757);
       case 'Transportasi':
-        return Colors.blue;
-      case 'Hiburan':
-        return Colors.purple;
+        return const Color(0xFF9B51E0);
       case 'Belanja':
-        return Colors.teal;
+        return const Color(0xFF27AE60);
+      case 'Alat Rumah':
+        return const Color(0xFFBB6BD9);
+      case 'Olahraga':
+        return const Color(0xFF2D9CDB);
+      case 'Hiburan':
+        return const Color(0xFF2D9CDB);
       default:
         return Colors.grey;
     }
   }
 
+  // Fungsi mapping ikon
   IconData _getCategoryIcon(String category) {
     switch (category) {
       case 'Makanan':
         return Icons.fastfood;
-      case 'Transportasi':
+      case 'Internet':
+        return Icons.wifi;
+      case 'Edukasi':
+        return Icons.school;
+      case 'Hadiah':
+        return Icons.card_giftcard;
+      case 'Transport':
         return Icons.directions_car;
-      case 'Hiburan':
-        return Icons.movie;
       case 'Belanja':
         return Icons.shopping_bag;
+      case 'Alat Rumah':
+        return Icons.home_repair_service;
+      case 'Olahraga':
+        return Icons.sports;
+      case 'Hiburan':
+        return Icons.movie;
       default:
         return Icons.category;
     }

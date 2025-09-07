@@ -6,11 +6,17 @@ import 'package:money_expense/core/data/models/hash_helper.dart';
 class CategoryModel {
   final int? id;
   final String name;
+  final String? color;
+  final String? iconName;
 
-  CategoryModel({this.id, required this.name});
+  CategoryModel({this.id, required this.name, this.color, this.iconName});
 
-  factory CategoryModel.fromDrift(CategoryData c) =>
-      CategoryModel(id: c.id, name: c.name);
+  factory CategoryModel.fromDrift(CategoryData c) => CategoryModel(
+    id: c.id,
+    name: c.name,
+    color: c.color,
+    iconName: c.iconName,
+  );
 
   CategoriesCompanion toCompanion() => CategoriesCompanion(
     id: id != null ? Value(id!) : const Value.absent(),
@@ -86,4 +92,11 @@ class TransactionModel {
     categoryId: Value(categoryId),
     date: Value(date),
   );
+}
+
+class TransactionWithCategory {
+  final TransactionModel transaction;
+  final CategoryModel category;
+
+  TransactionWithCategory(this.transaction, this.category);
 }

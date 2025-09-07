@@ -6,7 +6,8 @@ import 'package:money_expense/core/data/repositories/user_repository.dart';
 import 'package:money_expense/persentation/add%20new%20expe/add_new_expense.dart';
 import 'package:money_expense/persentation/home/widget/card_todat&mount/card_today&mount.dart';
 import 'package:money_expense/persentation/home/widget/card_with_category/expense_catagory.dart';
-import 'package:money_expense/persentation/home/widget/home_list/expense_today.dart';
+import 'package:money_expense/persentation/home/widget/card_today/expense_today.dart';
+import 'package:money_expense/persentation/home/widget/home_list/expense_yesterday.dart';
 
 class HomePage extends StatelessWidget {
   final AppDatabase db;
@@ -48,8 +49,11 @@ class HomePage extends StatelessWidget {
             style: TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 20),
+
           //Card Progress - total pengeluaran hari ini & bulan ini
           CardTodayAndMount(transactionRepo: transactionRepo),
+
+          //
           const SizedBox(height: 20),
           const Text(
             'Pengeluaran berdasarkan kategori',
@@ -67,12 +71,15 @@ class HomePage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Column(
-            children: const [
-              ExpenseToday(),
+            children: [
+              ExpenseToday(
+                transactionRepo: transactionRepo,
+                categoryRepo: categoryRepo,
+              ),
               SizedBox(height: 20),
-              ExpenseToday(),
+              // ExpenseToday(),
               SizedBox(height: 20),
-              ExpenseToday(),
+              // ExpenseToday(),
             ],
           ),
           const SizedBox(height: 28),
@@ -83,11 +90,11 @@ class HomePage extends StatelessWidget {
           const SizedBox(height: 20),
           Column(
             children: const [
-              ExpenseToday(),
+              ExpenseYesterday(),
               SizedBox(height: 20),
-              ExpenseToday(),
+              // ExpenseToday(),
               SizedBox(height: 20),
-              ExpenseToday(),
+              ExpenseYesterday(),
             ],
           ),
         ],

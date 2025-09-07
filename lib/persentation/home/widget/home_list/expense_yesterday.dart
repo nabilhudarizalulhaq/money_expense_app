@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ExpenseToday extends StatelessWidget {
-  const ExpenseToday({super.key});
+class ExpenseYesterday extends StatelessWidget {
+  const ExpenseYesterday({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -4,9 +4,8 @@ import 'package:money_expense/core/data/models/models.dart';
 import 'package:money_expense/core/data/repositories/catagory_repository.dart';
 import 'package:money_expense/core/data/repositories/transaction_repository.dart';
 
-
 class AddNewExpense extends StatefulWidget {
-  final AppDatabase db; 
+  final AppDatabase db;
 
   const AddNewExpense({super.key, required this.db});
 
@@ -103,13 +102,13 @@ class _AddNewExpenseState extends State<AddNewExpense> {
         .getAllCategories();
     CategoryModel? category = existingCategories.firstWhere(
       (c) => c.name.toLowerCase() == categoryName.toLowerCase(),
-      orElse: () => CategoryModel(name: categoryName),
+      orElse: () => CategoryModel(name: categoryName, color: ''),
     );
 
     // 2. Jika kategori baru, insert ke db
     if (category.id == null) {
       final newCatId = await categoryRepo.insertCategory(category);
-      category = CategoryModel(id: newCatId, name: category.name);
+      category = CategoryModel(id: newCatId, name: category.name, color: '');
     }
 
     // 3. Insert transaksi

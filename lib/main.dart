@@ -10,10 +10,6 @@ Future<void> main() async {
   runApp(MyApp(db: db));
 }
 
-// Future<void> main() async {
-//   runApp(const MyApp());
-// }
-
 class MyApp extends StatelessWidget {
   final AppDatabase db;
   const MyApp({super.key, required this.db});
