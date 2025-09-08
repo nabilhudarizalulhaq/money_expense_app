@@ -20,8 +20,10 @@ class CardProgres extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(14),
-      width: 180,
-      height: 100,
+      // width: 180,
+      width: (MediaQuery.of(context).size.width - 60) / 2,
+      // height: 120,
+      height: (MediaQuery.of(context).size.width - 60) / 2 * 0.66,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(12),

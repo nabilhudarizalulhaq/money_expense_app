@@ -162,7 +162,7 @@ class _AddNewExpenseState extends State<AddNewExpense> {
             fontSize: 18,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFFFFFFF),
         iconTheme: const IconThemeData(color: Colors.black),
         elevation: 1,
       ),
