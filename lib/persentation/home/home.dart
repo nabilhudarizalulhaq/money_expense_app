@@ -104,7 +104,16 @@ class HomePage extends StatelessWidget {
                     transactions: state.todayTransactions,
                   );
                 } else {
-                  return const Text('Tidak ada data hari ini');
+                  return Center(
+                    child: Text(
+                      'Tidak ada data hari ini',
+                      style: TextStyle(
+                        fontFamily: 'SourceSansPro',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    ),
+                  );
                 }
               },
             ),
@@ -131,12 +140,14 @@ class HomePage extends StatelessWidget {
                     categories: state.categories,
                   );
                 } else {
-                  return const Text(
-                    'Tidak ada data kemarin',
-                    style: TextStyle(
-                      fontFamily: 'SourceSansPro',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
+                  return Center(
+                    child: Text(
+                      'Tidak ada data kemarin',
+                      style: TextStyle(
+                        fontFamily: 'SourceSansPro',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
                     ),
                   );
                 }
