@@ -44,14 +44,21 @@ class CardExpenseCatagory extends StatelessWidget {
             backgroundColor: backgroundColor,
           ),
           const SizedBox(height: 14),
-          Text(title, style: TextStyle(fontSize: 14, color: textColor)),
+          Text(
+            title,
+            style: TextStyle(
+              fontFamily: 'SourceSansPro',
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+            ),
+          ),
           const SizedBox(height: 8),
           Text(
             amount,
             style: TextStyle(
+              fontFamily: 'SourceSansPro',
+              fontWeight: FontWeight.w700,
               fontSize: 14,
-              letterSpacing: 1,
-              fontWeight: FontWeight.bold,
               color: textColor,
             ),
           ),

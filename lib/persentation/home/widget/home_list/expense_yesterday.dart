@@ -73,13 +73,21 @@ class ExpenseYesterday extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text(cat.name, style: const TextStyle(fontSize: 16)),
+                  child: Text(
+                    cat.name,
+                    style: TextStyle(
+                      fontFamily: 'SourceSansPro',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
                 Text(
                   formatter.format(totalAmount),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                  style: TextStyle(
+                    fontFamily: 'SourceSansPro',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
                   ),
                 ),
               ],

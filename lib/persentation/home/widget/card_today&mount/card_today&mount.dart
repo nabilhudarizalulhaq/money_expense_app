@@ -39,7 +39,7 @@ class CardTodayAndMount extends StatelessWidget {
               ),
               const SizedBox(width: 20),
               CardProgres(
-                title: 'Pengeluaranmu \nbulan ini',
+                title: 'Pengeluaranmu \nbulan ini', 
                 amount: formatter.format(totalMonth),
                 backgroundColor: const Color(0xFF46B5A7),
               ),

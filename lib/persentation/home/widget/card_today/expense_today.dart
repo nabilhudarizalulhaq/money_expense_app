@@ -38,10 +38,7 @@ class ExpenseToday extends StatelessWidget {
           (sum, t) => sum + t.amount,
         );
 
-        final catName = cat.name.replaceAll(
-          ' ',
-          '',
-        ); // key untuk lookup warna & ikon
+        final catName = cat.name.replaceAll(' ', '');
 
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),
@@ -62,7 +59,7 @@ class ExpenseToday extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // Icon kategori dengan warna sesuai map
+                // Icon kategori warna sesuai map
                 ColorFiltered(
                   colorFilter: ColorFilter.mode(
                     ListCategoryData.categoryColors[catName] ?? Colors.black,
@@ -76,13 +73,21 @@ class ExpenseToday extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text(cat.name, style: const TextStyle(fontSize: 16)),
+                  child: Text(
+                    cat.name,
+                    style: TextStyle(
+                      fontFamily: 'SourceSansPro',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
                 Text(
                   formatter.format(totalAmount),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                  style: TextStyle(
+                    fontFamily: 'SourceSansPro',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
                   ),
                 ),
               ],

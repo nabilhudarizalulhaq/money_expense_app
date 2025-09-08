@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:money_expense/core/data/datasources/local_database.dart';
 import 'package:money_expense/core/data/models/models.dart';
 import 'package:money_expense/core/data/repositories/catagory_repository.dart';
 import 'package:money_expense/core/data/repositories/transaction_repository.dart';
+import 'package:money_expense/persentation/add%20new%20expe/widget/bottomsheet/bottomsheet.dart';
+import 'package:money_expense/persentation/add%20new%20expe/widget/success_popup.dart';
 import 'package:money_expense/shared/theme.dart';
 
 class AddNewExpense extends StatefulWidget {
@@ -19,38 +23,83 @@ class _AddNewExpenseState extends State<AddNewExpense> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController nominalController = TextEditingController();
+  final TextEditingController categoryController = TextEditingController();
+  final formatter = NumberFormat.currency(
+    locale: 'id_ID',
+    symbol: 'Rp. ',
+    decimalDigits: 0,
+  );
 
   String? selectedCategory;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting('id_ID', null);
+  }
 
   @override
   void dispose() {
     dateController.dispose();
     nameController.dispose();
     nominalController.dispose();
+    categoryController.dispose();
     super.dispose();
   }
 
+  String formatDateIndo(DateTime date) {
+    return DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(date);
+  }
+
+  // Pick date
   Future<void> _pickDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
+      locale: const Locale('id', 'ID'),
     );
 
     if (picked != null) {
       setState(() {
         selectedDate = picked;
-        dateController.text = "${picked.day}/${picked.month}/${picked.year}";
+        dateController.text = formatDateIndo(picked);
       });
     }
   }
 
+  // Show category bottom sheet
+  void _showCategorySheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => BottomSheetCategory(
+        selectedCategory: selectedCategory,
+        onSelected: (cat) {
+          setState(() {
+            selectedCategory = cat;
+            categoryController.text = cat;
+          });
+        },
+      ),
+    );
+  }
+
+  // Save transaction
   Future<void> _saveTransaction() async {
     final name = nameController.text.trim();
     final categoryName = selectedCategory?.trim() ?? '';
     final date = selectedDate ?? DateTime.now();
-    final nominal = double.tryParse(nominalController.text.trim()) ?? 0;
+    final nominalText = nominalController.text.replaceAll(
+      RegExp(r'[^0-9]'),
+      '',
+    );
+    final nominal = double.tryParse(nominalText) ?? 0;
 
     if (name.isEmpty || categoryName.isEmpty || nominal <= 0) {
       ScaffoldMessenger.of(
@@ -70,7 +119,7 @@ class _AddNewExpenseState extends State<AddNewExpense> {
       orElse: () => CategoryModel(name: categoryName, color: ''),
     );
 
-    // 2. Jika kategori baru, insert ke db
+    // 2. kategori baru, insert ke db
     if (category.id == null) {
       final newCatId = await categoryRepo.insertCategory(category);
       category = CategoryModel(id: newCatId, name: category.name, color: '');
@@ -86,21 +135,17 @@ class _AddNewExpenseState extends State<AddNewExpense> {
       ),
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Transaksi berhasil ditambahkan: ID $trxId')),
+    showDialog(
+      context: context,
+      builder: (context) =>
+          SuccessPopup(message: 'Data berhasil disimpan! $trxId'),
     );
-
-    // Debug print
-    print("Nama: $name");
-    print("Kategori: ${category.name} (ID: ${category.id})");
-    print("Tanggal: $date");
-    print("Nominal: $nominal");
-    print("Transaction inserted: $trxId");
 
     // Clear form
     nameController.clear();
     nominalController.clear();
     selectedCategory = null;
+    categoryController.clear();
     dateController.clear();
     setState(() {});
   }
@@ -111,7 +156,11 @@ class _AddNewExpenseState extends State<AddNewExpense> {
       appBar: AppBar(
         title: const Text(
           'Tambah Pengeluaran Baru',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontFamily: 'SourceSansPro',
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+          ),
         ),
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -120,11 +169,17 @@ class _AddNewExpenseState extends State<AddNewExpense> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // name expense
+          // Name expense
           TextField(
             controller: nameController,
             decoration: InputDecoration(
               labelText: 'Nama Pengeluaran',
+              labelStyle: TextStyle(
+                fontFamily: 'SourceSansPro',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+              ),
+              hintText: null,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -132,74 +187,108 @@ class _AddNewExpenseState extends State<AddNewExpense> {
           ),
           const SizedBox(height: 16),
 
-          // category expense
-          DropdownButtonFormField<String>(
-            value: selectedCategory,
-            items: ListCategoryData.categories.map((cat) {
-              return DropdownMenuItem<String>(
-                value: cat,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          ListCategoryData.categoryColors[cat] ?? Colors.black,
-                          BlendMode.srcIn,
-                        ),
-                        child: CategoryIcon.categoryIcons[cat],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(cat),
-                  ],
-                ),
-              );
-            }).toList(),
-            onChanged: (val) {
-              setState(() {
-                selectedCategory = val;
-              });
-            },
+          // Category expense (read-only + bottom sheet)
+          TextField(
+            controller: categoryController,
+            readOnly: true,
+
+            onTap: _showCategorySheet,
             decoration: InputDecoration(
               labelText: 'Kategori',
+              labelStyle: TextStyle(
+                fontFamily: 'SourceSansPro',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+              ),
+              hintText: null,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              suffixIcon: const Icon(
-                Icons.arrow_forward_ios_outlined,
-                size: 16,
-                color: Color(0xFF828282),
+              // Icon
+              prefixIcon: selectedCategory != null
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        margin: const EdgeInsets.all(6),
+                        width: 32,
+                        height: 32,
+                        color:
+                            ListCategoryData
+                                .categoryColors[selectedCategory!] ??
+                            Colors.grey,
+                        child: Center(
+                          child: CategoryIcon.categoryIcons[selectedCategory!],
+                        ),
+                      ),
+                    )
+                  : null,
+              prefixIconConstraints: const BoxConstraints(
+                minWidth: 32,
+                minHeight: 32,
+              ),
+              // Icon next bbottom sheet
+              suffixIcon: Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFFE0E0E0),
+                  ),
+                  child: const Icon(
+                    Icons.arrow_forward_ios_outlined,
+                    size: 16,
+                    color: Color(0xFF828282),
+                  ),
+                ),
+              ),
+              suffixIconConstraints: const BoxConstraints(
+                minWidth: 32,
+                minHeight: 32,
               ),
             ),
           ),
 
           const SizedBox(height: 16),
 
-          // date expense
+          // Date expense
           TextField(
             controller: dateController,
             readOnly: true,
             onTap: _pickDate,
             decoration: InputDecoration(
               labelText: 'Tanggal Pengeluaran',
+              labelStyle: TextStyle(
+                fontFamily: 'SourceSansPro',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+              ),
+              hintText: null,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
               suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today, color: Colors.grey),
+                icon: const Icon(
+                  Icons.calendar_today_outlined,
+                  color: Colors.grey,
+                ),
                 onPressed: _pickDate,
               ),
             ),
           ),
           const SizedBox(height: 16),
 
-          // price expense
+          // Price expense
           TextField(
             controller: nominalController,
             decoration: InputDecoration(
               labelText: 'Nominal',
+              labelStyle: TextStyle(
+                fontFamily: 'SourceSansPro',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -208,7 +297,7 @@ class _AddNewExpenseState extends State<AddNewExpense> {
           ),
           const SizedBox(height: 32),
 
-          // button save
+          // Button save
           SizedBox(
             height: 50,
             width: double.infinity,
@@ -222,7 +311,12 @@ class _AddNewExpenseState extends State<AddNewExpense> {
               onPressed: _saveTransaction,
               child: const Text(
                 'Simpan',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: TextStyle(
+                  fontFamily: 'SourceSansPro',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),

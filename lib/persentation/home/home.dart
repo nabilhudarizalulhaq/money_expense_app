@@ -9,7 +9,7 @@ import 'package:money_expense/persentation/home/bloc/transaction/transaction_blo
 import 'package:money_expense/persentation/home/bloc/transaction/transaction_event.dart';
 import 'package:money_expense/persentation/home/bloc/transaction/transaction_state.dart';
 
-import 'package:money_expense/persentation/home/widget/card_todat&mount/card_today&mount.dart';
+import 'package:money_expense/persentation/home/widget/card_today&mount/card_today&mount.dart';
 import 'package:money_expense/persentation/home/widget/card_with_category/expense_catagory.dart';
 import 'package:money_expense/persentation/home/widget/card_today/expense_today.dart';
 import 'package:money_expense/persentation/home/widget/home_list/expense_yesterday.dart';
@@ -45,9 +45,10 @@ class HomePage extends StatelessWidget {
                 }
                 return Text(
                   'Halo, $greeting!',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                  style: TextStyle(
+                    fontFamily: 'SourceSansPro',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 22,
                   ),
                 );
               },
@@ -55,7 +56,12 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 4),
             const Text(
               'Jangan lupa catat keuanganmu setiap hari!',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(
+                fontFamily: 'SourceSansPro',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                color: Color(0xFF828282),
+              ),
             ),
             const SizedBox(height: 20),
 
@@ -65,7 +71,11 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 20),
             const Text(
               'Pengeluaran berdasarkan kategori',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontFamily: 'SourceSansPro',
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              ),
             ),
             const SizedBox(height: 20),
             ExpenseCategory(
@@ -75,7 +85,11 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 28),
             const Text(
               'Hari ini',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontFamily: 'SourceSansPro',
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              ),
             ),
             const SizedBox(height: 20),
 
@@ -98,7 +112,11 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 28),
             const Text(
               'Kemarin',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontFamily: 'SourceSansPro',
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              ),
             ),
             const SizedBox(height: 20),
 
@@ -113,7 +131,14 @@ class HomePage extends StatelessWidget {
                     categories: state.categories,
                   );
                 } else {
-                  return const Text('Tidak ada data kemarin');
+                  return const Text(
+                    'Tidak ada data kemarin',
+                    style: TextStyle(
+                      fontFamily: 'SourceSansPro',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                    ),
+                  );
                 }
               },
             ),

@@ -8,7 +8,7 @@ class ListCategoryData {
     'Hadiah',
     'Transport',
     'Belanja',
-    'AlatRumah',
+    'Alat Rumah',
     'Olahraga',
     'Hiburan',
   ];
@@ -39,3 +39,4 @@ class CategoryIcon {
     'Hiburan': Image.asset('assets/png/hiburan.png'),
   };
 }
+

@@ -32,18 +32,20 @@ class CardProgres extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              color: titleColor,
+              fontFamily: 'SourceSansPro',
+              fontWeight: FontWeight.w600,
               fontSize: 14,
-              fontWeight: FontWeight.normal,
+              color: titleColor,
             ),
           ),
           Spacer(),
           Text(
             amount,
             style: TextStyle(
+              fontFamily: 'SourceSansPro',
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
               color: amountColor,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
             ),
           ),
         ],
