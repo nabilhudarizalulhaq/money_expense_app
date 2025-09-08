@@ -208,15 +208,15 @@ class _AddNewExpenseState extends State<AddNewExpense> {
               prefixIcon: selectedCategory != null
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        margin: const EdgeInsets.all(6),
-                        width: 32,
-                        height: 32,
-                        color:
-                            ListCategoryData
-                                .categoryColors[selectedCategory!] ??
-                            Colors.grey,
-                        child: Center(
+                      child: ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                          ListCategoryData.categoryColors[selectedCategory!] ??
+                              Colors.grey,
+                          BlendMode.srcIn,
+                        ),
+                        child: SizedBox(
+                          width: 32,
+                          height: 32,
                           child: CategoryIcon.categoryIcons[selectedCategory!],
                         ),
                       ),
