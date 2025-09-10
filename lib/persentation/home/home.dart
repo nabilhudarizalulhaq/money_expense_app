@@ -31,42 +31,8 @@ class HomePage extends StatelessWidget {
         categoryRepo: categoryRepo,
       )..add(LoadTransactions()),
       child: Scaffold(
-        bottomNavigationBar: Container(
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, -3),
-              ),
-            ],
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(25),
-              topRight: Radius.circular(25),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.home, color: Color(0xFF0A97B0)),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.bar_chart, color: Color(0xFF828282)),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.settings, color: Color(0xFF828282)),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: Colors.white,
+        // bottomNavigationBar: const CustomBottomNavBar(),
+        // backgroundColor: Colors.white,
         body: ListView(
           clipBehavior: Clip.none,
           padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
